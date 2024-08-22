@@ -115,18 +115,21 @@ export const data = [
       "Have you ever thought about reducing the amount of time you spend on social media?",
     type: "multiple",
     answers: [{ text: "Yes" }, { text: "No" }],
-  },
-  {
-    question:
-      "If yes, what motivated you to consider reducing your social media use? (Select all that apply)",
-    type: "checkbox",
-    answers: [
-      { text: "To improve productivity" },
-      { text: "To improve mental health" },
-      { text: "To reduce distractions" },
-      { text: "To increase face-to-face interactions" },
-      { text: "Other" },
-    ],
+    followUp: {
+      condition: "Yes",
+      nextQuestion: {
+        question:
+          "What motivated you to consider reducing your social media use? (Select all that apply)",
+        type: "checkbox",
+        answers: [
+          { text: "To improve productivity" },
+          { text: "To improve mental health" },
+          { text: "To reduce distractions" },
+          { text: "To increase face-to-face interactions" },
+          { text: "Other" },
+        ],
+      },
+    },
   },
   {
     question:
@@ -157,6 +160,15 @@ export const data = [
       "Have you ever used digital well-being or screen time management features on your smartphone?",
     type: "multiple",
     answers: [{ text: "Yes" }, { text: "No" }],
+    followUp: {
+      condition: "Yes",
+      nextQuestion: {
+        question:
+          "What features or apps did you use to manage your screen time and how successful were they?",
+        type: "open",
+        placeholder: "Type here",
+      },
+    },
   },
   {
     question:
@@ -173,19 +185,24 @@ export const data = [
       { text: "No" },
       { text: "I already use a non-smartphone" },
     ],
-  },
-  {
-    question:
-      "If you have considered switching to a non-smartphone, what stopped you from making the switch? (Select all that apply)",
-    type: "checkbox",
-    answers: [
-      { text: "Need access to work-related apps" },
-      { text: "Dependence on communication apps (e.g., WhatsApp, Messenger)" },
-      { text: "Fear of missing out (FOMO) on social media" },
-      { text: "Convenience of having everything in one device" },
-      { text: "Entertainment purposes (e.g., streaming, gaming)" },
-      { text: "Concern about losing functionality" },
-      { text: "Other" },
-    ],
+    followUp: {
+      condition: "Yes",
+      nextQuestion: {
+        question:
+          "What stopped you from switching to a non-smartphone? (Select all that apply)",
+        type: "checkbox",
+        answers: [
+          { text: "Need access to work-related apps" },
+          {
+            text: "Dependence on communication apps (e.g., WhatsApp, Messenger)",
+          },
+          { text: "Fear of missing out (FOMO) on social media" },
+          { text: "Convenience of having everything in one device" },
+          { text: "Entertainment purposes (e.g., streaming, gaming)" },
+          { text: "Concern about losing functionality" },
+          { text: "Other" },
+        ],
+      },
+    },
   },
 ];

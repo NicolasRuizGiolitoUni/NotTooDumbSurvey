@@ -12,6 +12,7 @@ const Survey = () => {
   const [selected, setSelected] = useState(null); // For single selection
   const [openEndedAnswers, setOpenEndedAnswers] = useState({});
   const [selectedOptions, setSelectedOptions] = useState([]); // For multiple checkboxes
+  const [followUpIndices, setFollowUpIndices] = useState(new Set()); // Track follow-ups
 
   const handleAnswerClick = (i) => {
     setSelected(i); // For multiple choice question
@@ -26,9 +27,11 @@ const Survey = () => {
 
   const handleCheckboxChange = (i) => {
     if (selectedOptions.includes(i)) {
-      setSelectedOptions(selectedOptions.filter((option) => option !== i)); // Deselect
+      // Deselect the option
+      setSelectedOptions(selectedOptions.filter((option) => option !== i));
     } else {
-      setSelectedOptions([...selectedOptions, i]); // Select
+      // Select the option
+      setSelectedOptions([...selectedOptions, i]);
     }
   };
 
@@ -38,7 +41,6 @@ const Survey = () => {
       case "multiple":
         return selected === null;
       case "open":
-        // Retrieve the answer for the current question index or use an empty string if not present
         const currentAnswer = openEndedAnswers[index] || "";
         return currentAnswer.trim() === "";
       case "checkbox":
@@ -49,33 +51,58 @@ const Survey = () => {
   };
 
   const next = () => {
+    const currentQuestion = data[index];
+    let newIndex = index;
+
+    if (currentQuestion.followUp) {
+      const selectedAnswerText = currentQuestion.answers[selected]?.text || "";
+
+      const selectedTexts = selectedOptions
+        .map((i) => currentQuestion.answers[i]?.text)
+        .filter(Boolean);
+
+      // Determine if follow-up should be shown
+      const shouldShowFollowUp =
+        (currentQuestion.type === "multiple" &&
+          selectedAnswerText === currentQuestion.followUp.condition) ||
+        (currentQuestion.type === "checkbox" &&
+          selectedTexts.includes(currentQuestion.followUp.condition));
+
+      if (shouldShowFollowUp && !followUpIndices.has(newIndex)) {
+        setFollowUpIndices((prev) => new Set(prev).add(newIndex + 1));
+        newIndex = index + 1;
+        data.splice(newIndex, 0, currentQuestion.followUp.nextQuestion); // Insert follow-up
+      }
+    }
+
+    // Move to the next question
     setIndex((prevIndex) => {
-      const newIndex = prevIndex + 1;
-      if (newIndex < data.length) {
-        // Reset state for the new question type
-        const newQuestion = data[newIndex];
-        switch (newQuestion.type) {
-          case "multiple":
-            setSelected(null); // Reset selected option for multiple choice questions
-            break;
-          case "open":
-            // Ensure previous answer for this index is not needed
-            setOpenEndedAnswers((prevAnswers) => {
-              const newAnswers = { ...prevAnswers };
-              delete newAnswers[prevIndex]; // Remove answer for the previous question
-              return newAnswers;
-            });
-            break;
-          case "checkbox":
-            setSelectedOptions([]); // Reset selected options for checkbox questions
-            break;
-          default:
-            break;
-        }
-        return newIndex;
+      const nextIndex = prevIndex + 1;
+      if (nextIndex < data.length) {
+        // Reset state based on the new question type
+        const nextQuestion = data[nextIndex];
+        resetQuestionState(nextQuestion);
+        return nextIndex;
       }
       return prevIndex; // Prevent index from going out of bounds
     });
+  };
+
+  // Helper function to reset state based on question type
+  const resetQuestionState = (question) => {
+    switch (question.type) {
+      case "multiple":
+        setSelected(null);
+        break;
+      case "checkbox":
+        setSelectedOptions([]);
+        break;
+      case "open":
+        // No need to reset open-ended text unless you wish to clear previous answers
+        break;
+      default:
+        break;
+    }
   };
 
   const currentQuestion = data[index];

@@ -41,12 +41,11 @@ const CheckboxQuestion = ({
   return (
     <ul>
       {question.answers.map((answer, i) => (
-        <li key={i}>
-          <input
-            type="checkbox"
-            checked={selectedOptions.includes(i)}
-            onChange={() => handleCheckboxChange(i)}
-          />
+        <li
+          key={i}
+          className={selectedOptions.includes(i) ? "selected" : ""}
+          onClick={() => handleCheckboxChange(i)}
+        >
           {answer.text}
         </li>
       ))}
