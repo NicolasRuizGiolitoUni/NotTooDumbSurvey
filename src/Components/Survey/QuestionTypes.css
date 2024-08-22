@@ -1,0 +1,18 @@
+.open-ended-textarea {
+  height: 40px;
+  width: 50%;
+  padding: 10px 20px 0 20px;
+
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  resize: none;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 16px;
+}
+
+.open-ended-textarea::placeholder {
+  margin-top: 10 px;
+  color: #888; /* Placeholder text color */
+  font-family: "Roboto-Regular", sans-serif; /* Placeholder text style */
+  font-size: 16px; /* Placeholder text size */
+}

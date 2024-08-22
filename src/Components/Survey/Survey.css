@@ -1,3 +1,5 @@
+/* Survey.css */
+
 body {
   font-family: "Roboto-Regular", sans-serif;
 }
@@ -20,7 +22,7 @@ body {
 }
 
 .title {
-  font-size: 100 px;
+  font-size: 100px;
   margin-bottom: 10px;
 }
 
@@ -64,17 +66,28 @@ body {
   cursor: pointer;
 }
 
-.container button {
-  background: #b9ff60;
+.container .next-button {
+  background: #ffffff;
   font-family: "Roboto", sans-serif;
   font-weight: bold;
   font-size: 15px;
   margin: auto;
   padding: 10px 50px;
   color: black;
-  border: none;
+  border: 2px solid #b9ff60;
   border-radius: 10px;
+  cursor: not-allowed;
+}
+
+.container .next-button.active {
+  background: #b9ff60;
+  color: black;
   cursor: pointer;
+}
+
+.container .next-button.disabled {
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
 .container .index {
