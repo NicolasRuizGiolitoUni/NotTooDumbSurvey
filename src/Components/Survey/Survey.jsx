@@ -51,40 +51,21 @@ const Survey = () => {
   };
 
   const next = () => {
-    const currentQuestion = data[index];
-    let newIndex = index;
-
-    if (currentQuestion.followUp) {
-      const selectedAnswerText = currentQuestion.answers[selected]?.text || "";
-
-      const selectedTexts = selectedOptions
-        .map((i) => currentQuestion.answers[i]?.text)
-        .filter(Boolean);
-
-      // Determine if follow-up should be shown
-      const shouldShowFollowUp =
-        (currentQuestion.type === "multiple" &&
-          selectedAnswerText === currentQuestion.followUp.condition) ||
-        (currentQuestion.type === "checkbox" &&
-          selectedTexts.includes(currentQuestion.followUp.condition));
-
-      if (shouldShowFollowUp && !followUpIndices.has(newIndex)) {
-        setFollowUpIndices((prev) => new Set(prev).add(newIndex + 1));
-        newIndex = index + 1;
-        data.splice(newIndex, 0, currentQuestion.followUp.nextQuestion); // Insert follow-up
-      }
-    }
-
-    // Move to the next question
     setIndex((prevIndex) => {
       const nextIndex = prevIndex + 1;
       if (nextIndex < data.length) {
-        // Reset state based on the new question type
-        const nextQuestion = data[nextIndex];
-        resetQuestionState(nextQuestion);
+        resetQuestionState(data[nextIndex]);
         return nextIndex;
       }
-      return prevIndex; // Prevent index from going out of bounds
+      return prevIndex;
+    });
+  };
+
+  const prev = () => {
+    setIndex((prevIndex) => {
+      const prevIndexAdjusted = Math.max(prevIndex - 1, 0);
+      resetQuestionState(data[prevIndexAdjusted]);
+      return prevIndexAdjusted;
     });
   };
 
@@ -96,9 +77,6 @@ const Survey = () => {
         break;
       case "checkbox":
         setSelectedOptions([]);
-        break;
-      case "open":
-        // No need to reset open-ended text unless you wish to clear previous answers
         break;
       default:
         break;
@@ -140,6 +118,27 @@ const Survey = () => {
 
   return (
     <div className="app">
+      <button
+        className="back-button"
+        onClick={prev}
+        disabled={index === 0} // Disable on the first question
+      >
+        {/* Inline SVG for Back Arrow */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="feather feather-arrow-left"
+        >
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+
       <div className="title-container">
         <h1 className="title-container">Not-Too-Dumb Phone Survey</h1>
       </div>

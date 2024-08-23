@@ -99,3 +99,30 @@ body {
   color: white !important;
   background-color: black !important;
 }
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  color: black;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.back-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.back-button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.back-button:disabled svg {
+  stroke: #ccc;
+}
